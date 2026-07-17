@@ -11,7 +11,7 @@ The initial product is intended to validate the usability of this interaction mo
 ### 1.1 Simple use case
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Open agentic-review] --> B[Choose worktree, base branch, and tmux session]
     B --> C[Review the local diff]
     C --> D[Leave an inline comment or general request]
