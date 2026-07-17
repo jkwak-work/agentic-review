@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>agent-diff</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">Δ</span>
+      <div>
+        <strong>agent-diff</strong>
+        <span id="repo-name" class="repo-name">Configure this review</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <div class="view-options" aria-label="Diff visualization options">
+        <label class="check-option"><input id="show-changed-files" type="checkbox" checked> Show changed files</label>
+        <label class="check-option"><input id="ignore-whitespace" type="checkbox"> Ignore whitespace</label>
+        <label class="check-option"><input id="unified-diff" type="checkbox"> Unified diff</label>
+        <label class="context-option">Context cache <input id="context-prefetch" type="number" min="10" max="500" step="10" value="30"> lines</label>
+      </div>
+      <button id="session-button" class="button subtle" type="button">
+        <span id="session-dot" class="status-dot"></span>
+        <span id="session-label">Configure review</span>
+      </button>
+      <button id="refresh-button" class="button" type="button">Refresh changes</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar">
+      <div class="sidebar-heading">
+        <span>Changed files</span>
+        <span id="file-count" class="count">0</span>
+      </div>
+      <nav id="file-list" class="file-list" aria-label="Changed files"></nav>
+    </aside>
+
+    <div id="sidebar-resizer" class="sidebar-resizer" role="separator" aria-label="Resize changed files pane" aria-orientation="vertical" aria-valuemin="180" aria-valuenow="250" tabindex="0"></div>
+
+    <section class="review-area">
+      <div id="review-content" class="review-content">
+        <div class="empty-state">
+          <div class="empty-icon">Δ</div>
+          <h1>Configure this review</h1>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="session-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="session-title">
+    <form id="session-form" class="modal">
+      <div class="modal-icon">›_</div>
+      <h2 id="session-title">Configure this review</h2>
+      <p id="session-help">Connect this browser tab to one worktree and one LLM agent.</p>
+      <label for="worktree-input">Git worktree path</label>
+      <input id="worktree-input" autocomplete="off" spellcheck="false" required>
+      <label for="branch-input">Base branch</label>
+      <input id="branch-input" autocomplete="off" spellcheck="false" required>
+      <label for="session-input">tmux session name</label>
+      <input id="session-input" list="session-options" autocomplete="off" spellcheck="false" required>
+      <datalist id="session-options"></datalist>
+      <div id="session-error" class="form-error" role="alert"></div>
+      <div class="modal-actions">
+        <button id="session-cancel" class="button subtle" type="button">Cancel</button>
+        <button class="button primary" type="submit">Connect</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
