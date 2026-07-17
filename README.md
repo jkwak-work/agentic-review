@@ -4,6 +4,8 @@
 
 The prototype keeps every conversation in memory. It does not create review files, modify the repository, or send code to a hosted service.
 
+<img width="880" height="539" alt="image" src="https://github.com/user-attachments/assets/1686501e-41d4-4f14-8557-b52f405236ea" />
+
 ## What works
 
 - Side-by-side diffs for committed, staged, unstaged, and untracked changes since a configurable base branch
