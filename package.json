@@ -1,11 +1,11 @@
 {
-  "name": "agent-diff",
+  "name": "agentic-review",
   "version": "0.1.0",
   "private": true,
   "description": "Review local code changes and discuss inline comments with an LLM in tmux.",
   "type": "commonjs",
   "bin": {
-    "agent-diff": "server.js"
+    "agentic-review": "server.js"
   },
   "scripts": {
     "start": "node server.js",

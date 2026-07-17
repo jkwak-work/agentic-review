@@ -1,8 +1,8 @@
-# agent-diff: Product and Design Specification
+# agentic-review: Product and Design Specification
 
 ## 1. Overview
 
-`agent-diff` is a local application for reviewing code changes made by LLM coding agents.
+`agentic-review` is a local application for reviewing code changes made by LLM coding agents.
 
 The application brings a GitHub-style code review workflow to changes that have not been pushed to a remote repository. A reviewer can inspect local diffs, attach a comment to a specific changed line or open a general discussion, send the request to an LLM agent running locally, and receive the agent's response in the originating conversation.
 
@@ -12,7 +12,7 @@ The initial product is intended to validate the usability of this interaction mo
 
 ```mermaid
 flowchart LR
-    A[Open agent-diff] --> B[Choose worktree, base branch, and tmux session]
+    A[Open agentic-review] --> B[Choose worktree, base branch, and tmux session]
     B --> C[Review the local diff]
     C --> D[Leave an inline comment or general request]
     D --> E[Queue the comment]
@@ -240,7 +240,7 @@ The prototype contains three participants:
 ```text
 +----------------------+       tmux input        +----------------------+
 |                      | ----------------------> |                      |
-| agent-diff           |                         | Terminal LLM agent   |
+| agentic-review       |                         | Terminal LLM agent   |
 |                      | <---------------------- |                      |
 +----------------------+   localhost reply API   +----------------------+
           |
@@ -286,11 +286,11 @@ The application treats the LLM agent as a terminal program rather than depending
 
 ### 8.4 Current implementation
 
-The prototype is a dependency-free Node.js 18+ HTTP server with a browser client written in plain HTML, CSS, and JavaScript. It requires no build step. By default it listens only on `127.0.0.1:4173`; `AGENT_DIFF_PORT` can select another port.
+The prototype is a dependency-free Node.js 18+ HTTP server with a browser client written in plain HTML, CSS, and JavaScript. It requires no build step. By default it listens only on `127.0.0.1:4173`; `AGENTIC_REVIEW_PORT` can select another port.
 
 The server invokes Git and tmux, owns review bindings, queues, thread state, reviewed-file fingerprints, and the authenticated reply endpoint. The browser parses the unified patch returned by the server and renders either the side-by-side or unified review layout. Server-sent events carry thread and queue updates to the owning page.
 
-While a review page is visible, the browser checks its diff every eight seconds and its tmux connection every ten seconds. These background checks update changed files and invalidate stale reviewed marks without requiring a manual refresh. The default agent-reply timeout is five minutes (`AGENT_DIFF_REPLY_TIMEOUT_MS`), and the default delay between pasting a prompt and sending Enter is one second (`AGENT_DIFF_SUBMIT_DELAY_MS`).
+While a review page is visible, the browser checks its diff every eight seconds and its tmux connection every ten seconds. These background checks update changed files and invalidate stale reviewed marks without requiring a manual refresh. The default agent-reply timeout is five minutes (`AGENTIC_REVIEW_REPLY_TIMEOUT_MS`), and the default delay between pasting a prompt and sending Enter is one second (`AGENTIC_REVIEW_SUBMIT_DELAY_MS`).
 
 ## 9. tmux Communication Design
 
@@ -321,7 +321,7 @@ Pane `session:0.0` is expected to contain the LLM agent. The server resolves and
 The injected prompt should be machine-readable enough to avoid ambiguity while remaining understandable to an agent. A conceptual example is:
 
 ```text
-[agent-diff inline review request]
+[agentic-review inline review request]
 Review context: <review-context-id>
 Worktree: /work/projects/compiler
 Base branch: main
@@ -338,7 +338,7 @@ If it only asks a question, answer without modifying files.
 
 Post the response to the supplied localhost endpoint using the thread ID
 and bearer token.
-[end agent-diff request]
+[end agentic-review request]
 ```
 
 The prompt contract should instruct the agent to distinguish between a question and a requested code change. For a requested change, the agent must edit the worktree and perform appropriate focused verification before replying; it must not merely describe or promise a future edit. Its reply summarizes changes actually made and checks performed. A comment asking only for explanation does not authorize code modification.

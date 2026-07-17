@@ -7,14 +7,14 @@ const crypto = require('node:crypto');
 const { execFile, spawn } = require('node:child_process');
 
 const HOST = '127.0.0.1';
-const requestedPort = Number(process.env.AGENT_DIFF_PORT || 4173);
-const replyTimeoutMs = Math.max(1000, Number(process.env.AGENT_DIFF_REPLY_TIMEOUT_MS) || 5 * 60 * 1000);
-const configuredSubmitDelayMs = Number(process.env.AGENT_DIFF_SUBMIT_DELAY_MS);
+const requestedPort = Number(process.env.AGENTIC_REVIEW_PORT || 4173);
+const replyTimeoutMs = Math.max(1000, Number(process.env.AGENTIC_REVIEW_REPLY_TIMEOUT_MS) || 5 * 60 * 1000);
+const configuredSubmitDelayMs = Number(process.env.AGENTIC_REVIEW_SUBMIT_DELAY_MS);
 const submitDelayMs = Number.isFinite(configuredSubmitDelayMs) && configuredSubmitDelayMs >= 0
   ? configuredSubmitDelayMs
   : 1000;
 const publicDir = path.join(__dirname, 'public');
-const suggestedWorktree = path.resolve(process.env.AGENT_DIFF_REPO || process.cwd());
+const suggestedWorktree = path.resolve(process.env.AGENTIC_REVIEW_REPO || process.cwd());
 const authToken = crypto.randomBytes(24).toString('hex');
 const reviews = new Map();
 const threads = new Map();
@@ -337,7 +337,7 @@ function buildAgentPrompt(review, thread) {
     : `the working-tree version at line ${thread.line}`);
 
   return [
-    `[agent-diff ${isGeneral ? 'general' : 'inline review'} request]`,
+    `[agentic-review ${isGeneral ? 'general' : 'inline review'} request]`,
     `Review context: ${review.id}`,
     `Worktree: ${review.worktree}`,
     `Base branch: ${review.baseBranch}`,
@@ -359,10 +359,10 @@ function buildAgentPrompt(review, thread) {
         ]),
     'Inspect the surrounding code, preserve the project style, and run appropriate focused checks when practical. In the reply, summarize the changes actually made and any verification performed.',
     'If the comment is only a question or asks for explanation, answer it without modifying files.',
-    'Send the reply back to agent-diff by running this command, replacing REPLY_TEXT with your response:',
+    'Send the reply back to agentic-review by running this command, replacing REPLY_TEXT with your response:',
     `curl -sS -X POST ${replyUrl} -H "Authorization: Bearer ${authToken}" -H "Content-Type: application/json" --data-binary '{"threadId":"${thread.id}","body":"REPLY_TEXT"}'`,
     'The request body must be valid JSON, so escape quotes and newlines in REPLY_TEXT. Prefer generating the JSON payload with a language JSON serializer when the reply is multiline.',
-    `[end agent-diff ${isGeneral ? 'general' : 'inline review'} request]`
+    `[end agentic-review ${isGeneral ? 'general' : 'inline review'} request]`
   ].join('\n');
 }
 
@@ -371,7 +371,7 @@ async function injectIntoTmux(review, prompt) {
   if (!sessions.includes(review.session)) throw new Error(`tmux session is no longer running: ${review.session}`);
   const panes = await listTmuxPanes(review.session);
   if (!panes.some((pane) => pane.id === review.paneId)) throw new Error(`tmux agent pane is no longer running: ${review.paneId}`);
-  const bufferName = `agent-diff-${crypto.randomBytes(6).toString('hex')}`;
+  const bufferName = `agentic-review-${crypto.randomBytes(6).toString('hex')}`;
   await runWithInput('tmux', ['load-buffer', '-b', bufferName, '-'], prompt, { cwd: review.worktree });
   try {
     await run('tmux', ['paste-buffer', '-d', '-b', bufferName, '-t', review.paneId], { cwd: review.worktree });
@@ -627,6 +627,6 @@ const server = http.createServer(async (request, response) => {
 
 server.listen(requestedPort, HOST, () => {
   listeningPort = server.address().port;
-  console.log(`agent-diff is ready for browser-scoped reviews.`);
+  console.log(`agentic-review is ready for browser-scoped reviews.`);
   console.log(`Open http://${HOST}:${listeningPort}`);
 });

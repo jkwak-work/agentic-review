@@ -1,6 +1,6 @@
-# agent-diff
+# agentic-review
 
-`agent-diff` is a local, GitHub-style review surface for code changed by an LLM agent. It reads a Git working-tree diff, supports both line-specific comments and general requests, sends each message to an agent running in tmux, and displays the agent's socket-delivered reply in the originating conversation.
+`agentic-review` is a local, GitHub-style review surface for code changed by an LLM agent. It reads a Git working-tree diff, supports both line-specific comments and general requests, sends each message to an agent running in tmux, and displays the agent's socket-delivered reply in the originating conversation.
 
 The prototype keeps every conversation in memory. It does not create review files, modify the repository, or send code to a hosted service.
 
@@ -44,10 +44,10 @@ Then open `http://127.0.0.1:4173`. Each browser tab asks for the Git worktree pa
 To use it as a command, link it once:
 
 ```bash
-cd /path/to/agent-diff
+cd /path/to/agentic-review
 npm link
 cd /path/to/repository
-agent-diff
+agentic-review
 ```
 
 In that form, the current directory is suggested in the setup form. Entering a worktree automatically derives the session name from its directory and detects its default branch. Both suggestions remain editable.
@@ -55,10 +55,10 @@ In that form, the current directory is suggested in the setup form. Entering a w
 Set a different suggested worktree with an environment variable:
 
 ```bash
-AGENT_DIFF_REPO=/path/to/repository npm start
+AGENTIC_REVIEW_REPO=/path/to/repository npm start
 ```
 
-Override the port with `AGENT_DIFF_PORT`.
+Override the port with `AGENTIC_REVIEW_PORT`.
 
 For the smoothest startup, name the agent's tmux session after the repository directory:
 
@@ -70,23 +70,23 @@ Then launch the LLM agent in that session. The setup form lists existing session
 
 ## Review loop
 
-1. Open agent-diff in a browser tab.
+1. Open agentic-review in a browser tab.
 2. Enter the worktree path. Confirm or edit the derived base branch and tmux session name.
 3. Start the review. The diff includes feature-branch commits plus staged, unstaged, and untracked changes since the merge base.
 4. Select a changed file from the sidebar.
 5. Click an old or new line number.
 6. Write the inline comment and select **Send to agent**.
-7. agent-diff queues the comment. If no earlier comment is waiting for a reply, it pastes the request into that page's tmux session and presses Enter.
+7. agentic-review queues the comment. If no earlier comment is waiting for a reply, it pastes the request into that page's tmux session and presses Enter.
 8. The request tells the agent how to inspect the location and includes the configured base branch, a reply URL, thread ID, and bearer token.
 9. The agent posts its response to the localhost endpoint; the reply appears in the originating browser tab immediately.
 
 For a request that is not tied to a line, select **General discussion** at the top of the **Changed files** pane. Its chat screen accepts questions and work requests and uses the same serialized delivery queue as inline comments. A count beside the item shows how many general conversations exist in the current review.
 
-Only one comment per review context waits for the agent at a time. Later comments remain visibly queued and can be deleted before delivery. An agent reply, delivery failure, or reply timeout advances the queue. The default timeout is five minutes and can be changed with `AGENT_DIFF_REPLY_TIMEOUT_MS`.
+Only one comment per review context waits for the agent at a time. Later comments remain visibly queued and can be deleted before delivery. An agent reply, delivery failure, or reply timeout advances the queue. The default timeout is five minutes and can be changed with `AGENTIC_REVIEW_REPLY_TIMEOUT_MS`.
 
-After pasting a prompt, agent-diff waits one second before sending Enter as a separate tmux input. This gives terminal agents time to finish processing the multiline paste before submission. Adjust the delay in milliseconds for faster or slower agents using `AGENT_DIFF_SUBMIT_DELAY_MS`.
+After pasting a prompt, agentic-review waits one second before sending Enter as a separate tmux input. This gives terminal agents time to finish processing the multiline paste before submission. Adjust the delay in milliseconds for faster or slower agents using `AGENTIC_REVIEW_SUBMIT_DELAY_MS`.
 
-After finishing a file, select its checkbox in the **Changed files** list. agent-diff stores a fingerprint of that file's current patch. It checks for local changes in the background; if the patch changes, the checkbox is cleared, the file receives a needs-review indicator, and a notification is shown.
+After finishing a file, select its checkbox in the **Changed files** list. agentic-review stores a fingerprint of that file's current patch. It checks for local changes in the background; if the patch changes, the checkbox is cleared, the file receives a needs-review indicator, and a notification is shown.
 
 Select **Hide conversation** when a discussion is finished. Its comments and replies collapse into a compact summary without being deleted; **Show conversation** restores the thread.
 
@@ -94,7 +94,7 @@ Use **Ignore whitespace** to suppress whitespace-only changes and **Unified diff
 
 Clear **Show changed files** to hide the left sidebar and give the diff the full page width. Re-enable it to restore the sidebar at its previous width. This preference is also saved in the browser.
 
-Each page preloads 30 context lines from Git while initially showing only three. **Show more above** and **Show more below** reveal those cached rows entirely in the browser and keep the first changed line stationary. When the cache is exhausted, agent-diff requests a larger buffer and continues up to 500 lines. Change the preload size with the **Context cache** option in the top bar, or use **Reset context** to collapse a file back to three visible lines.
+Each page preloads 30 context lines from Git while initially showing only three. **Show more above** and **Show more below** reveal those cached rows entirely in the browser and keep the first changed line stationary. When the cache is exhausted, agentic-review requests a larger buffer and continues up to 500 lines. Change the preload size with the **Context cache** option in the top bar, or use **Reset context** to collapse a file back to three visible lines.
 
 Open another browser tab to review another worktree or communicate with another agent. The server keeps each page's worktree/base-branch/session binding under a unique review-context ID so requests cannot accidentally combine values from different pages.
 

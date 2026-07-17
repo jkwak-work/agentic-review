@@ -906,13 +906,13 @@ elements.showChangedFiles.addEventListener('change', () => {
 });
 elements.ignoreWhitespace.addEventListener('change', () => {
   state.ignoreWhitespace = elements.ignoreWhitespace.checked;
-  localStorage.setItem('agent-diff-ignore-whitespace', String(state.ignoreWhitespace));
+  localStorage.setItem('agentic-review-ignore-whitespace', String(state.ignoreWhitespace));
   state.rawDiff = '';
   refreshDiff();
 });
 elements.unifiedDiff.addEventListener('change', () => {
   state.unifiedDiff = elements.unifiedDiff.checked;
-  localStorage.setItem('agent-diff-unified-diff', String(state.unifiedDiff));
+  localStorage.setItem('agentic-review-unified-diff', String(state.unifiedDiff));
   const scrollTop = elements.reviewContent.scrollTop;
   renderReview();
   elements.reviewContent.scrollTop = scrollTop;
@@ -921,7 +921,7 @@ elements.contextPrefetch.addEventListener('change', () => {
   const value = Math.max(10, Math.min(500, Number.parseInt(elements.contextPrefetch.value, 10) || 30));
   state.prefetchContextLines = value;
   elements.contextPrefetch.value = String(value);
-  localStorage.setItem('agent-diff-context-prefetch', String(value));
+  localStorage.setItem('agentic-review-context-prefetch', String(value));
   if (state.review && value > state.loadedContextLines) {
     refreshDiff({ preserveScroll: true, requestedContext: value });
   }
@@ -959,7 +959,7 @@ elements.sessionForm.addEventListener('submit', async (event) => {
     state.composing = null;
     state.generalSelected = false;
     state.generalDraft = '';
-    document.title = `${state.review.label} · agent-diff`;
+    document.title = `${state.review.label} · agentic-review`;
     hideReviewModal();
     startEvents();
     if (previousReview) {
@@ -972,10 +972,10 @@ elements.sessionForm.addEventListener('submit', async (event) => {
   }
 });
 
-state.showChangedFiles = localStorage.getItem('agent-diff-show-changed-files') !== 'false';
-state.ignoreWhitespace = localStorage.getItem('agent-diff-ignore-whitespace') === 'true';
-state.unifiedDiff = localStorage.getItem('agent-diff-unified-diff') === 'true';
-const savedContextPrefetch = Number.parseInt(localStorage.getItem('agent-diff-context-prefetch'), 10);
+state.showChangedFiles = localStorage.getItem('agentic-review-show-changed-files') !== 'false';
+state.ignoreWhitespace = localStorage.getItem('agentic-review-ignore-whitespace') === 'true';
+state.unifiedDiff = localStorage.getItem('agentic-review-unified-diff') === 'true';
+const savedContextPrefetch = Number.parseInt(localStorage.getItem('agentic-review-context-prefetch'), 10);
 state.prefetchContextLines = Math.max(10, Math.min(500, Number.isFinite(savedContextPrefetch) ? savedContextPrefetch : 30));
 elements.showChangedFiles.checked = state.showChangedFiles;
 elements.ignoreWhitespace.checked = state.ignoreWhitespace;
@@ -1003,7 +1003,7 @@ function setSidebarVisibility(visible, persist = true) {
   state.showChangedFiles = visible;
   elements.showChangedFiles.checked = visible;
   elements.workspace.classList.toggle('sidebar-hidden', !visible);
-  if (persist) localStorage.setItem('agent-diff-show-changed-files', String(visible));
+  if (persist) localStorage.setItem('agentic-review-show-changed-files', String(visible));
 }
 
 setSidebarVisibility(state.showChangedFiles, false);
@@ -1018,10 +1018,10 @@ function setSidebarWidth(width, persist = true) {
   elements.workspace.style.setProperty('--sidebar-width', `${nextWidth}px`);
   elements.sidebarResizer.setAttribute('aria-valuemax', String(bounds.max));
   elements.sidebarResizer.setAttribute('aria-valuenow', String(nextWidth));
-  if (persist) localStorage.setItem('agent-diff-sidebar-width', String(nextWidth));
+  if (persist) localStorage.setItem('agentic-review-sidebar-width', String(nextWidth));
 }
 
-const savedSidebarWidth = Number(localStorage.getItem('agent-diff-sidebar-width'));
+const savedSidebarWidth = Number(localStorage.getItem('agentic-review-sidebar-width'));
 setSidebarWidth(Number.isFinite(savedSidebarWidth) && savedSidebarWidth > 0 ? savedSidebarWidth : defaultSidebarWidth, false);
 
 elements.sidebarResizer.addEventListener('pointerdown', (event) => {
