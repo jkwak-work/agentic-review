@@ -723,9 +723,19 @@ function renderReview() {
 
 function renderSession() {
   elements.sessionDot.classList.toggle('connected', state.connected);
-  elements.sessionLabel.textContent = state.review
-    ? `${state.review.session} · ${state.review.paneId}`
-    : 'Configure review';
+  elements.sessionLabel.replaceChildren();
+  if (state.review) {
+    const paneLabel = make('span', 'session-pane', `· ${state.review.paneId}`);
+    paneLabel.title = `tmux pane ID ${state.review.paneId} — review prompts are sent to this pinned pane`;
+    elements.sessionLabel.append(
+      make('span', 'session-name', state.review.session),
+      paneLabel
+    );
+    elements.sessionButton.title = `${state.review.session} · ${state.review.paneId}`;
+  } else {
+    elements.sessionLabel.textContent = 'Configure review';
+    elements.sessionButton.title = '';
+  }
   elements.repoName.textContent = state.review
     ? `${state.review.worktree} · base ${state.review.baseBranch}`
     : 'Configure this review';

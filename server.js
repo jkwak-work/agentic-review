@@ -375,6 +375,7 @@ async function injectIntoTmux(review, prompt) {
   await runWithInput('tmux', ['load-buffer', '-b', bufferName, '-'], prompt, { cwd: review.worktree });
   try {
     await run('tmux', ['paste-buffer', '-d', '-b', bufferName, '-t', review.paneId], { cwd: review.worktree });
+    await run('tmux', ['send-keys', '-t', review.paneId, 'Enter'], { cwd: review.worktree });
     await delay(submitDelayMs);
     await run('tmux', ['send-keys', '-t', review.paneId, 'Enter'], { cwd: review.worktree });
   } catch (error) {

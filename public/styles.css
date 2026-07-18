@@ -47,7 +47,7 @@ button { color: inherit; }
   font-weight: 800;
 }
 .repo-name { max-width: 50vw; overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.topbar-actions { display: flex; gap: 8px; }
+.topbar-actions { display: flex; align-items: center; min-width: 0; gap: 8px; }
 .view-options { display: flex; align-items: center; gap: 12px; padding: 0 6px; }
 .check-option { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); cursor: pointer; font-size: 12px; white-space: nowrap; }
 .check-option:hover { color: var(--text); }
@@ -70,8 +70,12 @@ button { color: inherit; }
 .button.subtle { background: transparent; }
 .button.primary { border-color: rgba(240,246,252,.1); background: #238636; }
 .button.primary:hover { background: #2ea043; }
-.status-dot { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--red); }
+.status-dot { display: inline-block; flex: 0 0 auto; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--red); }
 .status-dot.connected { background: var(--green); box-shadow: 0 0 0 3px rgba(63,185,80,.12); }
+#session-button { display: flex; align-items: center; min-width: 0; max-width: 220px; white-space: nowrap; }
+#session-label { display: flex; align-items: center; min-width: 0; overflow: hidden; gap: 4px; }
+.session-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.session-pane { flex: 0 0 auto; color: var(--muted); }
 
 .workspace { --sidebar-width: 250px; display: grid; grid-template-columns: var(--sidebar-width) 6px minmax(0, 1fr); height: calc(100% - 58px); min-height: 0; }
 .workspace.sidebar-hidden { grid-template-columns: minmax(0, 1fr); }
