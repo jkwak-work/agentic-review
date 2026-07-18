@@ -12,7 +12,7 @@ const replyTimeoutMs = Math.max(1000, Number(process.env.AGENTIC_REVIEW_REPLY_TI
 const configuredSubmitDelayMs = Number(process.env.AGENTIC_REVIEW_SUBMIT_DELAY_MS);
 const submitDelayMs = Number.isFinite(configuredSubmitDelayMs) && configuredSubmitDelayMs >= 0
   ? configuredSubmitDelayMs
-  : 1000;
+  : 5000;
 const publicDir = path.join(__dirname, 'public');
 const suggestedWorktree = path.resolve(process.env.AGENTIC_REVIEW_REPO || process.cwd());
 const authToken = crypto.randomBytes(24).toString('hex');

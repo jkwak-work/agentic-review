@@ -290,7 +290,7 @@ The prototype is a dependency-free Node.js 18+ HTTP server with a browser client
 
 The server invokes Git and tmux, owns review bindings, queues, thread state, reviewed-file fingerprints, and the authenticated reply endpoint. The browser parses the unified patch returned by the server and renders either the side-by-side or unified review layout. Server-sent events carry thread and queue updates to the owning page.
 
-While a review page is visible, the browser checks its diff every eight seconds and its tmux connection every ten seconds. These background checks update changed files and invalidate stale reviewed marks without requiring a manual refresh. The default agent-reply timeout is five minutes (`AGENTIC_REVIEW_REPLY_TIMEOUT_MS`), and the default delay between pasting a prompt and sending Enter is one second (`AGENTIC_REVIEW_SUBMIT_DELAY_MS`).
+While a review page is visible, the browser checks its diff every eight seconds and its tmux connection every ten seconds. These background checks update changed files and invalidate stale reviewed marks without requiring a manual refresh. The default agent-reply timeout is five minutes (`AGENTIC_REVIEW_REPLY_TIMEOUT_MS`), and the default delay between pasting a prompt and sending Enter is five seconds (`AGENTIC_REVIEW_SUBMIT_DELAY_MS`).
 
 ## 9. tmux Communication Design
 

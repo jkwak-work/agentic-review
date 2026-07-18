@@ -86,7 +86,7 @@ For a request that is not tied to a line, select **General discussion** at the t
 
 Only one comment per review context waits for the agent at a time. Later comments remain visibly queued and can be deleted before delivery. An agent reply, delivery failure, or reply timeout advances the queue. The default timeout is five minutes and can be changed with `AGENTIC_REVIEW_REPLY_TIMEOUT_MS`.
 
-After pasting a prompt, agentic-review waits one second before sending Enter as a separate tmux input. This gives terminal agents time to finish processing the multiline paste before submission. Adjust the delay in milliseconds for faster or slower agents using `AGENTIC_REVIEW_SUBMIT_DELAY_MS`.
+After pasting a prompt, agentic-review waits five seconds before sending Enter as a separate tmux input. This gives Codex time to exit bracketed-paste handling before submission. Adjust the delay in milliseconds for faster or slower agents using `AGENTIC_REVIEW_SUBMIT_DELAY_MS`.
 
 After finishing a file, select its checkbox in the **Changed files** list. agentic-review stores a fingerprint of that file's current patch. It checks for local changes in the background; if the patch changes, the checkbox is cleared, the file receives a needs-review indicator, and a notification is shown.
 
